@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     textAlign: "center",
-    fontWeight: 40,
+
     color: theme.blue600,
     borderColor: theme.blue600,
     borderWidth: 2,
