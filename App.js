@@ -1,15 +1,37 @@
-import { StatusBar } from "expo-status-bar";
 import { ImageBackground, SafeAreaView, StyleSheet, Text } from "react-native";
+import { useCallback, useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
+
 import { LinearGradient } from "expo-linear-gradient";
-import StartGameScreen from "./screens/StartGameScreen";
 import theme from "./styles/theme";
-import { useState } from "react";
+import * as SplashScreen from "expo-splash-screen";
+
+import StartGameScreen from "./screens/StartGameScreen";
 import GameScreen from "./screens/GameScreen";
 import GameOverScreen from "./screens/GameOverScreen";
+
+// expo 프로젝트의 경우 expo-font를 사용하면 쉽게 폰트적용이 가능
+
+// SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [userNumber, setUserNumber] = useState();
   const [gameIsOver, setGameIsOver] = useState(true);
+
+  const [fontsLoaded] = useFonts({
+    "noto-sans": require("./assets/font/NotoSansKR-VariableFont_wght.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const userNumberHandler = (number) => {
     setUserNumber(number);
