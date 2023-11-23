@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import Title from "../components/ui/Title";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import NumberContainer from "../components/game/NumberContainer";
+import Card from "../components/ui/Card";
+import GuideText from "../components/ui/GuideText";
 
 const generateRandomBetween = (min, max, exlcude) => {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -56,21 +58,24 @@ const GameScreen = ({ userNumber, onGameOver }) => {
     <View style={styles.screen}>
       <Title>예상 숫자</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
-      <View>
-        <Text>Higer or Lower?</Text>
-        <View style={styles.buttonsContainer}>
-          <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
-              -
-            </PrimaryButton>
-          </View>
-          <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
-              +
-            </PrimaryButton>
+      <Card>
+        <View>
+          {/* Cascade 적용을 위한 style prop 전달 */}
+          <GuideText style={styles.guideText}>Higer or Lower?</GuideText>
+          <View style={styles.buttonsContainer}>
+            <View style={styles.buttonContainer}>
+              <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+                -
+              </PrimaryButton>
+            </View>
+            <View style={styles.buttonContainer}>
+              <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
+                +
+              </PrimaryButton>
+            </View>
           </View>
         </View>
-      </View>
+      </Card>
       <View>
         <Text>Log Rounds</Text>
       </View>
@@ -84,6 +89,10 @@ export default GameScreen;
 const styles = StyleSheet.create({
   screen: {
     padding: 24,
+  },
+
+  guideText: {
+    marginBottom: 24,
   },
   buttonsContainer: {
     flexDirection: "row",
