@@ -19,5 +19,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginBottom: 24,
+    maxWidth: "80%",
+    width: 300,
   },
 });
