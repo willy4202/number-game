@@ -1,4 +1,12 @@
-import { Alert, StyleSheet, Text, View, FlatList } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  useWindowDimensions,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Title from "../components/ui/Title";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -26,6 +34,8 @@ const GameScreen = ({ userNumber, onGameOver }) => {
   const [currentGuess, setCureentGuess] = useState(initalGuess);
   const [guessRound, setGuessRound] = useState([initalGuess]);
   const guessRoundListLength = guessRound.length;
+  const { width, height } = useWindowDimensions();
+
   useEffect(() => {
     if (currentGuess === userNumber) {
       onGameOver(guessRoundListLength);
@@ -63,31 +73,57 @@ const GameScreen = ({ userNumber, onGameOver }) => {
     setGuessRound((prev) => [newRndNumber, ...prev]);
   };
 
+  let content;
+
+  if (height > 500) {
+    content = (
+      <>
+        <NumberContainer>{currentGuess}</NumberContainer>
+        <Card>
+          <View>
+            {/* Cascade 적용을 위한 style prop 전달 */}
+            <GuideText style={styles.guideText}>Higer or Lower?</GuideText>
+            <View style={styles.buttonsContainer}>
+              <View style={styles.buttonContainer}>
+                <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+                  <Ionicons name="md-remove" size={24} color={theme.white} />
+                </PrimaryButton>
+              </View>
+              <View style={styles.buttonContainer}>
+                <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
+                  <Ionicons name="md-add" size={24} color={theme.white} />
+                </PrimaryButton>
+              </View>
+            </View>
+          </View>
+        </Card>
+      </>
+    );
+  } else {
+    content = (
+      <>
+        <View style={styles.buttonsContainerWide}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+              <Ionicons name="md-remove" size={24} color={theme.white} />
+            </PrimaryButton>
+          </View>
+          <NumberContainer>{currentGuess}</NumberContainer>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
+              <Ionicons name="md-add" size={24} color={theme.white} />
+            </PrimaryButton>
+          </View>
+        </View>
+      </>
+    );
+  }
+
   return (
     <View style={styles.screen}>
       <Title>업,다운을 알려주세요</Title>
-      <NumberContainer>{currentGuess}</NumberContainer>
-      <Card>
-        <View>
-          {/* Cascade 적용을 위한 style prop 전달 */}
-          <GuideText style={styles.guideText}>Higer or Lower?</GuideText>
-          <View style={styles.buttonsContainer}>
-            <View style={styles.buttonContainer}>
-              <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
-                <Ionicons name="md-remove" size={24} color={theme.white} />
-              </PrimaryButton>
-            </View>
-            <View style={styles.buttonContainer}>
-              <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
-                <Ionicons name="md-add" size={24} color={theme.white} />
-              </PrimaryButton>
-            </View>
-          </View>
-        </View>
-      </Card>
+      {content}
       <View style={styles.listContainer}>
-        {/* <Text>Log Rounds</Text> */}
-
         <FlatList
           data={guessRound}
           renderItem={({ item, index }) => (
@@ -99,7 +135,6 @@ const GameScreen = ({ userNumber, onGameOver }) => {
           keyExtractor={({ item }) => item}
         />
       </View>
-      {/* <PrimaryButton onPress={generateRandomBetween}>랜덤 생성</PrimaryButton> */}
     </View>
   );
 };
@@ -116,11 +151,10 @@ const styles = StyleSheet.create({
   guideText: {
     marginBottom: 24,
   },
-  buttonsContainer: {
-    flexDirection: "row",
-  },
+  buttonsContainer: { flexDirection: "row", justifyContent: "center" },
+  buttonsContainerWide: { flexDirection: "row", alignItems: "center" },
   buttonContainer: {
-    flex: 1,
+    // flex: 1,
   },
 
   listContainer: {
